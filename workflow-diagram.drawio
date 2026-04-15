@@ -1,0 +1,182 @@
+<mxfile host="Claude Code" modified="2026-04-15" agent="Claude" version="21.0.0" type="device">
+  <diagram id="dns-a-record-simple" name="DNS A Record Provisioning - Simple">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- LEGEND -->
+        <mxCell id="leg0" value="Legend" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="80" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg1" value="workflow_start / end" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="65" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="leg2" value="WFE operation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="200" y="65" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="leg3" value="Adapter task" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="330" y="65" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="leg4" value="Error / Warning handler" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="460" y="65" width="160" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- HAPPY PATH (y=220) -->
+
+        <!-- workflow_start -->
+        <mxCell id="t0" value="workflow_start" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="200" width="130" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- T1: merge FQDN vars -->
+        <mxCell id="t1" value="&lt;b&gt;T1 merge&lt;/b&gt;&lt;br/&gt;Build FQDN Variables&lt;br/&gt;&lt;i&gt;hostname + zone&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="210" y="190" width="150" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- T2: makeData FQDN -->
+        <mxCell id="t2" value="&lt;b&gt;T2 makeData&lt;/b&gt;&lt;br/&gt;Build FQDN&lt;br/&gt;&lt;i&gt;&lt;!hostname!&gt;.&lt;!zone!&gt;&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="400" y="190" width="150" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- T3: merge body -->
+        <mxCell id="t3" value="&lt;b&gt;T3 merge&lt;/b&gt;&lt;br/&gt;Build Request Body&lt;br/&gt;&lt;i&gt;fqdn, ipv4addr, view, ttl, comment&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="590" y="190" width="150" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- T4: createARecord -->
+        <mxCell id="t4" value="&lt;b&gt;T4 createARecord&lt;/b&gt;&lt;br/&gt;Create A Record&lt;br/&gt;&lt;i&gt;Infoblox (infobloxv9)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="780" y="190" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- T5: query ref -->
+        <mxCell id="t5" value="&lt;b&gt;T5 query&lt;/b&gt;&lt;br/&gt;Extract Infoblox Ref&lt;br/&gt;&lt;i&gt;result.response → infoblox_ref&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="990" y="190" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- T6: merge email vars -->
+        <mxCell id="t6" value="&lt;b&gt;T6 merge&lt;/b&gt;&lt;br/&gt;Build Email Variables&lt;br/&gt;&lt;i&gt;fqdn, ip_address, dns_view, ref&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="190" width="150" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- T7: makeData email body -->
+        <mxCell id="t7" value="&lt;b&gt;T7 makeData&lt;/b&gt;&lt;br/&gt;Build Email Body&lt;br/&gt;&lt;i&gt;FQDN / IP / View / Ref&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="190" width="150" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- T8: mailWithOptions -->
+        <mxCell id="t8" value="&lt;b&gt;T8 mailWithOptions&lt;/b&gt;&lt;br/&gt;Send Email&lt;br/&gt;&lt;i&gt;EmailOpensource (email)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1580" y="190" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- workflow_end -->
+        <mxCell id="t_end" value="workflow_end" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1790" y="200" width="130" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ERROR HANDLERS (y=320) -->
+
+        <!-- T10: error handler (below T4) -->
+        <mxCell id="t10" value="&lt;b&gt;T10 newVariable&lt;/b&gt;&lt;br/&gt;Error Handler&lt;br/&gt;&lt;i&gt;error_message&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="780" y="320" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- T9: email warning (below T8) -->
+        <mxCell id="t9" value="&lt;b&gt;T9 newVariable&lt;/b&gt;&lt;br/&gt;Email Warning&lt;br/&gt;&lt;i&gt;email_warning&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1580" y="320" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- HAPPY PATH EDGES -->
+
+        <mxCell id="e01" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#82b366;" edge="1" source="t0" target="t1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="t1" target="t2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e23" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="t2" target="t3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e34" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="t3" target="t4" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e45_ok" value="success" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#82b366;fontColor=#82b366;fontSize=9;" edge="1" source="t4" target="t5" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e56" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="t5" target="t6" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e67" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="t6" target="t7" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e78" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="t7" target="t8" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e8_end" value="success" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#82b366;fontColor=#82b366;fontSize=9;" edge="1" source="t8" target="t_end" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ERROR EDGES -->
+
+        <mxCell id="e4_err" value="error" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#b85450;fontColor=#b85450;fontSize=9;dashed=1;" edge="1" source="t4" target="t10" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e10_end" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;entryX=0.5;entryY=1;strokeColor=#b85450;dashed=1;" edge="1" source="t10" target="t_end" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1855" y="350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="e8_err" value="error" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#b85450;fontColor=#b85450;fontSize=9;dashed=1;" edge="1" source="t8" target="t9" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e9_end" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;entryX=0.5;entryY=1;strokeColor=#b85450;dashed=1;" edge="1" source="t9" target="t_end" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1855" y="350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ANNOTATIONS -->
+
+        <mxCell id="ann1" value="Infoblox adapter&#xa;POST /record:a" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;fontSize=9;fontColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="780" y="158" width="160" height="28" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ann2" value="EmailOpensource adapter&#xa;to: ankit.bhansali@itential.com" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;fontSize=9;fontColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1560" y="158" width="200" height="28" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ann3" value="adapter_id: infobloxv9" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="800" y="262" width="120" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ann4" value="adapter_id: email" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="1600" y="262" width="120" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- TITLE -->
+        <mxCell id="title" value="DNS A Record Provisioning - Simple" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="110" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="Platform: platform-6-aidev.se.itential.io  |  Project: 69dfa72a8bd76ce3c64563f6  |  Built: 2026-04-15" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;fontSize=10;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="40" y="140" width="700" height="20" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

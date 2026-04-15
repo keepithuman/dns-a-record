@@ -1,0 +1,8 @@
+# Credentials — never commit
+.env
+.auth.json
+
+# Large platform discovery files — re-pull with solution-arch-agent
+tasks.json
+workflows.json
+applications.json

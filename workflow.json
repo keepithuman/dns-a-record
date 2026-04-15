@@ -1,0 +1,340 @@
+{
+  "automation": {
+    "name": "DNS A Record Provisioning - Simple",
+    "description": "Creates a DNS A record in Infoblox via self-service form. Fully automatic — no manual tasks.",
+    "type": "automation",
+    "canvasVersion": 3,
+    "encodingVersion": 1,
+    "font_size": 12,
+    "tasks": {
+      "workflow_start": {
+        "name": "workflow_start",
+        "groups": [],
+        "nodeLocation": { "x": 200, "y": 600 }
+      },
+      "a1b1": {
+        "name": "merge",
+        "canvasName": "merge",
+        "summary": "Build FQDN Variables",
+        "description": "Collects hostname and zone for FQDN construction",
+        "location": "Application",
+        "locationType": null,
+        "app": "WorkFlowEngine",
+        "type": "operation",
+        "displayName": "WorkFlowEngine",
+        "variables": {
+          "incoming": {
+            "data_to_merge": [
+              { "key": "hostname", "value": { "task": "job", "variable": "hostname" } },
+              { "key": "zone",     "value": { "task": "job", "variable": "zone" } }
+            ]
+          },
+          "outgoing": { "merged_object": null },
+          "error": "",
+          "decorators": []
+        },
+        "groups": [],
+        "actor": "Pronghorn",
+        "scheduled": false,
+        "nodeLocation": { "x": 464, "y": 600 }
+      },
+      "b1c1": {
+        "name": "makeData",
+        "canvasName": "makeData",
+        "summary": "Build FQDN",
+        "description": "Concatenates hostname.zone into FQDN using <!var!> placeholders",
+        "location": "Application",
+        "locationType": null,
+        "app": "WorkFlowEngine",
+        "type": "operation",
+        "displayName": "WorkFlowEngine",
+        "variables": {
+          "incoming": {
+            "input": "<!hostname!>.<!zone!>",
+            "outputType": "string",
+            "variables": "$var.a1b1.merged_object"
+          },
+          "outgoing": { "output": "$var.job.fqdn" },
+          "error": "",
+          "decorators": []
+        },
+        "groups": [],
+        "actor": "Pronghorn",
+        "scheduled": false,
+        "nodeLocation": { "x": 824, "y": 600 }
+      },
+      "c1d1": {
+        "name": "merge",
+        "canvasName": "merge",
+        "summary": "Build Request Body",
+        "description": "Assembles the Infoblox WAPI POST body from job variables",
+        "location": "Application",
+        "locationType": null,
+        "app": "WorkFlowEngine",
+        "type": "operation",
+        "displayName": "WorkFlowEngine",
+        "variables": {
+          "incoming": {
+            "data_to_merge": [
+              { "key": "name",     "value": { "task": "job", "variable": "fqdn" } },
+              { "key": "ipv4addr", "value": { "task": "job", "variable": "ip_address" } },
+              { "key": "view",     "value": { "task": "job", "variable": "dns_view" } },
+              { "key": "ttl",      "value": { "task": "job", "variable": "ttl" } },
+              { "key": "comment",  "value": { "task": "job", "variable": "comment" } }
+            ]
+          },
+          "outgoing": { "merged_object": null },
+          "error": "",
+          "decorators": []
+        },
+        "groups": [],
+        "actor": "Pronghorn",
+        "scheduled": false,
+        "nodeLocation": { "x": 1184, "y": 600 }
+      },
+      "d1e1": {
+        "name": "createARecord",
+        "canvasName": "createARecord",
+        "summary": "Create A Record",
+        "description": "Creates the DNS A record in Infoblox via WAPI POST /record:a",
+        "location": "Adapter",
+        "locationType": "Infoblox",
+        "app": "Infoblox",
+        "type": "automatic",
+        "displayName": "infobloxv9",
+        "variables": {
+          "incoming": {
+            "body": "$var.c1d1.merged_object",
+            "adapter_id": "infobloxv9"
+          },
+          "outgoing": { "result": null },
+          "error": "",
+          "decorators": []
+        },
+        "groups": [],
+        "actor": "Pronghorn",
+        "scheduled": false,
+        "nodeLocation": { "x": 1544, "y": 600 }
+      },
+      "e1f1": {
+        "name": "query",
+        "canvasName": "query",
+        "summary": "Extract Infoblox Ref",
+        "description": "Extracts the _ref string from createARecord result.response",
+        "location": "Application",
+        "locationType": null,
+        "app": "WorkFlowEngine",
+        "type": "operation",
+        "displayName": "WorkFlowEngine",
+        "variables": {
+          "incoming": {
+            "pass_on_null": false,
+            "query": "response",
+            "obj": "$var.d1e1.result"
+          },
+          "outgoing": { "return_data": "$var.job.infoblox_ref" },
+          "error": "",
+          "decorators": []
+        },
+        "groups": [],
+        "actor": "Pronghorn",
+        "scheduled": false,
+        "nodeLocation": { "x": 1904, "y": 600 }
+      },
+      "f1a2": {
+        "name": "merge",
+        "canvasName": "merge",
+        "summary": "Build Email Variables",
+        "description": "Collects values for the email body makeData template",
+        "location": "Application",
+        "locationType": null,
+        "app": "WorkFlowEngine",
+        "type": "operation",
+        "displayName": "WorkFlowEngine",
+        "variables": {
+          "incoming": {
+            "data_to_merge": [
+              { "key": "fqdn",       "value": { "task": "job", "variable": "fqdn" } },
+              { "key": "ip_address", "value": { "task": "job", "variable": "ip_address" } },
+              { "key": "dns_view",   "value": { "task": "job", "variable": "dns_view" } },
+              { "key": "ref",        "value": { "task": "job", "variable": "infoblox_ref" } }
+            ]
+          },
+          "outgoing": { "merged_object": null },
+          "error": "",
+          "decorators": []
+        },
+        "groups": [],
+        "actor": "Pronghorn",
+        "scheduled": false,
+        "nodeLocation": { "x": 2264, "y": 600 }
+      },
+      "a2b2": {
+        "name": "makeData",
+        "canvasName": "makeData",
+        "summary": "Build Email Body",
+        "description": "Constructs the email body string with record details",
+        "location": "Application",
+        "locationType": null,
+        "app": "WorkFlowEngine",
+        "type": "operation",
+        "displayName": "WorkFlowEngine",
+        "variables": {
+          "incoming": {
+            "input": "DNS A Record Provisioned Successfully\n\nFQDN: <!fqdn!>\nIP Address: <!ip_address!>\nDNS View: <!dns_view!>\nInfoblox Ref: <!ref!>",
+            "outputType": "string",
+            "variables": "$var.f1a2.merged_object"
+          },
+          "outgoing": { "output": null },
+          "error": "",
+          "decorators": []
+        },
+        "groups": [],
+        "actor": "Pronghorn",
+        "scheduled": false,
+        "nodeLocation": { "x": 2624, "y": 600 }
+      },
+      "b2c2": {
+        "name": "mailWithOptions",
+        "canvasName": "mailWithOptions",
+        "summary": "Send Email",
+        "description": "Sends success notification with provisioned record details",
+        "location": "Adapter",
+        "locationType": "EmailOpensource",
+        "app": "EmailOpensource",
+        "type": "automatic",
+        "displayName": "email",
+        "variables": {
+          "incoming": {
+            "from": "noreply@itential.com",
+            "to": ["ankit.bhansali@itential.com"],
+            "subject": "DNS A Record Provisioned",
+            "body": "$var.a2b2.output",
+            "displayName": "Itential",
+            "adapter_id": "email"
+          },
+          "outgoing": { "result": null },
+          "error": "",
+          "decorators": []
+        },
+        "groups": [],
+        "actor": "Pronghorn",
+        "scheduled": false,
+        "nodeLocation": { "x": 2984, "y": 600 }
+      },
+      "c2d2": {
+        "name": "newVariable",
+        "canvasName": "newVariable",
+        "summary": "Email Warning",
+        "description": "Sets email_warning — email failed but DNS record was created. Exists because JSON cannot have duplicate keys (both success and error from mailWithOptions cannot both target workflow_end directly).",
+        "location": "Application",
+        "locationType": null,
+        "app": "WorkFlowEngine",
+        "type": "operation",
+        "displayName": "WorkFlowEngine",
+        "variables": {
+          "incoming": {
+            "name": "email_warning",
+            "value": "DNS record created successfully but email notification failed."
+          },
+          "outgoing": { "value": "$var.job.email_warning" },
+          "error": "",
+          "decorators": []
+        },
+        "groups": [],
+        "actor": "Pronghorn",
+        "scheduled": false,
+        "nodeLocation": { "x": 2984, "y": 732 }
+      },
+      "d2e2": {
+        "name": "newVariable",
+        "canvasName": "newVariable",
+        "summary": "Error Handler",
+        "description": "Sets error_message on Infoblox adapter failure",
+        "location": "Application",
+        "locationType": null,
+        "app": "WorkFlowEngine",
+        "type": "operation",
+        "displayName": "WorkFlowEngine",
+        "variables": {
+          "incoming": {
+            "name": "error_message",
+            "value": "DNS A Record provisioning failed or was rejected. Check job error for details."
+          },
+          "outgoing": { "value": "$var.job.error_message" },
+          "error": "",
+          "decorators": []
+        },
+        "groups": [],
+        "actor": "Pronghorn",
+        "scheduled": false,
+        "nodeLocation": { "x": 1544, "y": 732 }
+      },
+      "workflow_end": {
+        "name": "workflow_end",
+        "groups": [],
+        "nodeLocation": { "x": 3260, "y": 600 }
+      }
+    },
+    "transitions": {
+      "workflow_start": {
+        "a1b1": { "type": "standard", "state": "success" }
+      },
+      "a1b1": {
+        "b1c1": { "type": "standard", "state": "success" }
+      },
+      "b1c1": {
+        "c1d1": { "type": "standard", "state": "success" }
+      },
+      "c1d1": {
+        "d1e1": { "type": "standard", "state": "success" }
+      },
+      "d1e1": {
+        "e1f1": { "type": "standard", "state": "success" },
+        "d2e2": { "type": "standard", "state": "error" }
+      },
+      "e1f1": {
+        "f1a2": { "type": "standard", "state": "success" }
+      },
+      "f1a2": {
+        "a2b2": { "type": "standard", "state": "success" }
+      },
+      "a2b2": {
+        "b2c2": { "type": "standard", "state": "success" }
+      },
+      "b2c2": {
+        "workflow_end": { "type": "standard", "state": "success" },
+        "c2d2":         { "type": "standard", "state": "error" }
+      },
+      "c2d2": {
+        "workflow_end": { "type": "standard", "state": "success" }
+      },
+      "d2e2": {
+        "workflow_end": { "type": "standard", "state": "success" }
+      },
+      "workflow_end": {}
+    },
+    "groups": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "hostname":   { "title": "hostname",   "type": "string" },
+        "zone":       { "title": "zone",       "type": "string" },
+        "ip_address": { "title": "ip_address", "type": "string" },
+        "dns_view":   { "title": "dns_view",   "type": "string" },
+        "ttl":        { "title": "ttl",        "type": "number" },
+        "comment":    { "title": "comment",    "type": "string" }
+      },
+      "required": ["hostname", "zone", "ip_address", "dns_view"]
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "fqdn":          { "title": "fqdn",          "type": "string" },
+        "infoblox_ref":  { "title": "infoblox_ref",  "type": "string" },
+        "error_message": { "title": "error_message", "type": "string" },
+        "email_warning": { "title": "email_warning", "type": "string" }
+      }
+    }
+  }
+}
